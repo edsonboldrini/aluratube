@@ -24,13 +24,20 @@ function HomePage () {
 }
 
 const StyledHeader = styled.div`
-  img {
+  .banner {
+    object-fit: cover;
+    width: 100%;
+    height: 200px;
+  }
+
+  .user-img {
     width: 80px;
     height: 80px;
     border-radius: 50%;
   }
+
   .user-info {
-    margin-top: 50px;
+    margin-top: 16px;
     display: flex;
     align-items: center;
     width: 100%;
@@ -41,10 +48,9 @@ const StyledHeader = styled.div`
 function Header () {
   return (
     <StyledHeader>
-      Header
-      {/* <img src="banner" /> */}
+      <img className='banner' src='https://media.istockphoto.com/id/537331500/pt/foto/fundo-abstrato-tecnologia-de-c%C3%B3digo-de-programa%C3%A7%C3%A3o-de-deve-software.jpg?s=1024x1024&w=is&k=20&c=sjcsvE53PphQQOrSDuNv_Par1fwlg5hRNxfOdKQdnL4=' />
       <section className='user-info'>
-        <img src={`https://github.com/${config.github}.png`} />
+        <img className='user-img' src={`https://github.com/${config.github}.png`} />
         <div>
           <h2>{config.name}</h2>
           <p>{config.job}</p>
