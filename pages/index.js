@@ -17,18 +17,11 @@ function HomePage () {
         <Menu />
         <Header />
         <Timeline playlists={config.playlists} />
+        <Favorites favoriteUsers={config.favoriteUsers} />
       </div>
     </>
   )
 }
-
-// function Menu () {
-//   return (
-//     <div>
-//       Menu
-//     </div>
-//   )
-// }
 
 const StyledHeader = styled.div`
   img {
@@ -75,7 +68,7 @@ function Timeline (props) {
               {
                 videos.map((video) => {
                   return (
-                    <a href={video.url}>
+                    <a href={video.url} target='_blank'>
                       <img src={video.thumb} />
                       <span>
                         {video.title}
@@ -89,6 +82,62 @@ function Timeline (props) {
         )
       })}
     </StyledTimeline>
+  )
+}
+
+const StyledFavorites = styled.div`
+  padding: 16px 32px;
+
+  section > div {
+    display: flex;
+    text-align: center;
+    gap: 16px;
+  }
+
+  h2 {
+    font-size: 16px;
+    margin-bottom: 16px;
+  }
+
+  a {
+    width: 120px;
+  }
+
+  img {
+    height: 120px;
+    width: 120px;
+    border-radius: 50%;
+    margin-bottom: 8px;
+  }
+
+  h4 {
+    font-size: 14px;
+    font-weight: 100;
+    color: black;
+    word-wrap: break-word;
+  }
+`
+function Favorites (props) {
+  const { favoriteUsers } = props
+
+  return (
+    <StyledFavorites>
+      <section>
+        <h2>AluraTubes favoritos</h2>
+        <div>
+          {favoriteUsers.map((user) => {
+            return (
+              <a href={`https://www.youtube.com/@${user.name}`} target='_blank'>
+                <img src={user.img} />
+                <h4>
+                  @{user.name}
+                </h4>
+              </a>
+            )
+          })}
+        </div>
+      </section>
+    </StyledFavorites>
   )
 }
 

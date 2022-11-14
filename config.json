@@ -2,6 +2,24 @@
   "name": "Edson Boldrini",
   "job": "Software Engineer",
   "github": "edsonboldrini",
+  "favoriteUsers": [
+    {
+      "name": "devsoutinho",
+      "img": "https://yt3.ggpht.com/m8Yrqf0Y81L4mZ1Cq7rGnJ4NDHe6729rxiFZvWyy9-xd_Z7Osmza7J8NWpN1axMHcCb1oKJNgA=s176-c-k-c0x00ffffff-no-rj-mo"
+    },
+    {
+      "name": "alura",
+      "img": "https://yt3.ggpht.com/xqhIoXspeX7eqouJvNHl1xqpv9213Pl26ENZbuouXxO2RlDadjsveNXfgnj8GTUk7thFYUkVRg=s176-c-k-c0x00ffffff-no-rj-mo"
+    },
+    {
+      "name": "rocketseat",
+      "img": "https://yt3.ggpht.com/ytc/AMLnZu9-n9mDtKOwVMx3_-2zr8H57lHFag5t-0JcJNFPUQ=s176-c-k-c0x00ffffff-no-rj-mo"
+    },
+    {
+      "name": "sujeitoprogramador",
+      "img": "https://yt3.ggpht.com/ytc/AMLnZu9QQfchgya69UIA0J4YrAEZ6a-MudBBQ_pgYm7vkA=s176-c-k-c0x00ffffff-no-rj-mo"
+    }
+  ],
   "playlists": {
     "games": [
       {
