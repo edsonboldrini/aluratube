@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from "styled-components"
 
 const StyledMenu = styled.header`
   display: flex;
@@ -22,7 +22,7 @@ const StyledMenu = styled.header`
       fill: ${({ theme }) => theme.textColorBase || "#222222"};
     }
   }
-`;
+`
 
 export default function Menu () {
   return (
@@ -31,7 +31,7 @@ export default function Menu () {
         <Logo />
       </div>
     </StyledMenu>
-  );
+  )
 }
 
 function Logo () {

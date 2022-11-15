@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from "styled-components"
 
 export const StyledTimeline = styled.div`
   flex: 1;
@@ -43,4 +43,4 @@ export const StyledTimeline = styled.div`
       }
     }
   }
-`;
+`
