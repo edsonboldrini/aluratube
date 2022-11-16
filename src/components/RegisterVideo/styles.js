@@ -60,11 +60,14 @@ export const StyledRegisterVideo = styled.div`
     border-radius: 2px;
     border: 1px solid ${({ theme }) => theme.borderBase};
     padding: 8px 10px;
-    margin-bottom: 10px;
     outline: none;
     color: #222222;
     background-color: #f9f9f9;
     color: ${({ theme }) => theme.textColorBase};
     background-color: ${({ theme }) => theme.backgroundBase};
+  }
+  p {
+    color: red;
+    margin: 4px 4px 10px;
   }
 `

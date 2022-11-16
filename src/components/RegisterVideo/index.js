@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { StyledRegisterVideo } from "./styles";
 
-function useForm ({ initialValues, onSubmit }) {
+function useForm ({ initialValues, onSubmit, validate }) {
   const [values, setValues] = useState(initialValues)
+  const [errors, setErrors] = useState({})
 
   function handleChange (event) {
     setValues({ ...values, [event.target.name]: event.target.value })
@@ -14,7 +15,11 @@ function useForm ({ initialValues, onSubmit }) {
 
   function handleSubmit (event) {
     event.preventDefault()
-    onSubmit?.(values);
+    const errorsResponse = validate?.(values)
+    setErrors(errorsResponse)
+    if (Object.keys(errorsResponse).length == 0) {
+      onSubmit?.(values);
+    }
   }
 
   return {
@@ -22,6 +27,7 @@ function useForm ({ initialValues, onSubmit }) {
     handleChange,
     clearForm,
     handleSubmit,
+    errors,
   }
 }
 
@@ -42,7 +48,22 @@ export default function RegisterVideo () {
         setIsModalVisible(false)
         createVideoForm.clearForm()
       }, 1000)
-    }
+    },
+    validate: (values) => {
+      const errors = {};
+      if (!values.title) {
+        errors.title = 'Required';
+      }
+      if (values.title.length < 3) {
+        errors.title = 'Minimum length is 3';
+      }
+      if (
+        !/^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/i.test(values.url)
+      ) {
+        errors.url = 'Invalid Youtube url address';
+      }
+      return errors;
+    },
   })
 
   return (
@@ -70,8 +91,11 @@ export default function RegisterVideo () {
                   }
                 }}
               />
+              {
+                <p>{createVideoForm.errors.title}</p>
+              }
               <input
-                placeholder='URL'
+                placeholder='Youtube url'
                 name='url'
                 value={createVideoForm.values.url}
                 onChange={createVideoForm.handleChange}
@@ -82,6 +106,9 @@ export default function RegisterVideo () {
                   }
                 }}
               />
+              {
+                <p>{createVideoForm.errors.url}</p>
+              }
               <button type='submit'>
                 Cadastrar
               </button>
