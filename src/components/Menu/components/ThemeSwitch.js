@@ -1,22 +1,22 @@
-import { useState } from "react"
+import { useContext } from "react"
 import styled from "styled-components"
+import { ColorModeContext } from "./ColorModeProvider";
 
-export const lightTheme = {
-  dark: false,
-  backgroundBase: "#F9F9F9",
-  backgroundLevel1: "#FFFFFF",
-  backgroundLevel2: "#F0F0F0",
-  borderBase: "#E5E5E5",
-  textColorBase: "#222222"
-}
-
-export const darkTheme = {
-  dark: true,
-  backgroundBase: "#181818",
-  backgroundLevel1: "#202020",
-  backgroundLevel2: "#313131",
-  borderBase: "#383838",
-  textColorBase: "#FFFFFF"
+export const themes = {
+  'light': {
+    backgroundBase: "#F9F9F9",
+    backgroundLevel1: "#FFFFFF",
+    backgroundLevel2: "#F0F0F0",
+    borderBase: "#E5E5E5",
+    textColorBase: "#222222"
+  },
+  'dark': {
+    backgroundBase: "#181818",
+    backgroundLevel1: "#202020",
+    backgroundLevel2: "#313131",
+    borderBase: "#383838",
+    textColorBase: "#FFFFFF"
+  }
 }
 
 const StyledSwitch = styled.div`
@@ -83,16 +83,14 @@ const StyledSwitch = styled.div`
     border-radius: 50%;
   }
 `
-export function ThemeSwitch ({ theme, setTheme }) {
-  return (
-    <StyledSwitch theme={theme}>
-      <label class="switch">
-        <input type='checkbox' value={theme.dark} onChange={(event) => {
-          if (event.target.checked) {
-            return setTheme(darkTheme)
-          }
+export function ThemeSwitch () {
+  const colorModeContext = useContext(ColorModeContext)
 
-          return setTheme(lightTheme)
+  return (
+    <StyledSwitch>
+      <label class="switch">
+        <input type='checkbox' checked={colorModeContext.mode == 'dark'} onChange={(event) => {
+          colorModeContext.toggleMode()
         }} />
         <span class="slider round"></span>
       </label>

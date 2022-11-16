@@ -1,6 +1,8 @@
 import styled from "styled-components"
 
-export const StyledHeader = styled.div` 
+export const StyledHeader = styled.div`
+  background-color: ${({ theme }) => theme.backgroundLevel1};
+
   .user-img {
     width: 80px;
     height: 80px;

@@ -28,7 +28,7 @@ export const StyledFavorites = styled.div`
   h4 {
     font-size: 14px;
     font-weight: 100;
-    color: black;
     word-wrap: break-word;
+    color: ${({ theme }) => theme.textColorBase}
   }
 `
