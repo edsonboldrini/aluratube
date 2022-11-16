@@ -1,6 +1,7 @@
 import styled from "styled-components"
 import { ThemeSwitch } from "./components/ThemeSwitch"
 import Search from "./components/Search"
+import Link from "next/link"
 
 const StyledMenu = styled.header`
   display: flex;
@@ -26,14 +27,18 @@ const StyledMenu = styled.header`
   }
 `
 
-export default function Menu ({ theme, setTheme, searchInput, setSearchInput }) {
+export default function Menu ({ theme, setTheme, showSearch = true, searchInput, setSearchInput }) {
   return (
     <StyledMenu theme={theme}>
       <div>
-        <Logo />
+        <Link href={'/'}>
+          <Logo />
+        </Link>
       </div>
-      <Search searchInput={searchInput} setSearchInput={setSearchInput} theme={theme} />
-      <ThemeSwitch theme={theme} setTheme={setTheme} />
+      {showSearch &&
+        <Search searchInput={searchInput} setSearchInput={setSearchInput} theme={theme} />
+      }
+      <ThemeSwitch />
     </StyledMenu>
   )
 }

@@ -17,7 +17,7 @@ export default function Video (props) {
 
   return (
     <>
-      <Menu />
+      <Menu showSearch={false} />
       <StyledVideo>
         <div>
           <iframe
