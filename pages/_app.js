@@ -12,7 +12,7 @@ function ProviderWrapper (props) {
   )
 }
 
-function MyApp ({ Component, pageProps }) {
+function Root ({ Component, pageProps }) {
   const colorModeContext = useContext(ColorModeContext)
 
   return (
@@ -26,7 +26,7 @@ function MyApp ({ Component, pageProps }) {
 export default function _App (props) {
   return (
     <ProviderWrapper>
-      <MyApp {...props} />
+      <Root {...props} />
     </ProviderWrapper>
   )
 }

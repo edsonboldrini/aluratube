@@ -6,12 +6,14 @@ import { StyledTimeline } from '../src/components/Timeline'
 import { StyledFavorites } from '../src/components/Favorites'
 import { useState } from 'react'
 import Link from 'next/link'
+import RegisterVideo from '../src/components/RegisterVideo'
 
 function HomePage () {
   const [searchInput, setSearchInput] = useState('')
 
   return (
     <>
+      <RegisterVideo />
       <div>
         <Menu searchInput={searchInput} setSearchInput={setSearchInput} />
         <Header />

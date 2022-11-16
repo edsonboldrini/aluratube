@@ -35,7 +35,8 @@ export default function Menu ({ theme, setTheme, showSearch = true, searchInput,
           <Logo />
         </Link>
       </div>
-      {showSearch &&
+      {
+        showSearch &&
         <Search searchInput={searchInput} setSearchInput={setSearchInput} theme={theme} />
       }
       <ThemeSwitch />
