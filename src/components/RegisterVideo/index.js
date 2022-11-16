@@ -11,6 +11,7 @@ function useForm ({ initialValues, onSubmit, validate }) {
 
   function clearForm () {
     setValues(initialValues)
+    setErrors({})
   }
 
   function handleSubmit (event) {
@@ -22,12 +23,17 @@ function useForm ({ initialValues, onSubmit, validate }) {
     }
   }
 
+  function clearErrors () {
+    setErrors({})
+  }
+
   return {
     values,
     handleChange,
     clearForm,
     handleSubmit,
     errors,
+    clearErrors,
   }
 }
 
@@ -68,7 +74,9 @@ export default function RegisterVideo () {
 
   return (
     <StyledRegisterVideo>
-      <button className="add-video" onClick={() => setIsModalVisible(true)}>
+      <button className="add-video" onClick={() => {
+        setIsModalVisible(true)
+      }}>
         +
       </button>
       {
@@ -76,7 +84,10 @@ export default function RegisterVideo () {
         (
           <form onSubmit={createVideoForm.handleSubmit}>
             <div>
-              <button type="button " className="close-modal" onClick={() => setIsModalVisible(false)}>
+              <button type="button" className="close-modal" onClick={() => {
+                createVideoForm.clearForm()
+                setIsModalVisible(false)
+              }}>
                 X
               </button>
               <input

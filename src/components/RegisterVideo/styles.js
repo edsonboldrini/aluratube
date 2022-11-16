@@ -68,6 +68,8 @@ export const StyledRegisterVideo = styled.div`
   }
   p {
     color: red;
-    margin: 4px 4px 10px;
+    padding-left: 10px;
+    padding-top: 4px;
+    margin-bottom: 16px;
   }
 `
