@@ -9,6 +9,7 @@ import { useState } from 'react'
 
 function HomePage () {
   const [searchInput, setSearchInput] = useState('')
+  const [isDark, setIsDark] = useState(false)
 
   return (
     <>
@@ -18,7 +19,7 @@ function HomePage () {
         flexDirection: "column",
         flex: 1,
       }}>
-        <Menu searchInput={searchInput} setSearchInput={setSearchInput} />
+        <Menu searchInput={searchInput} setSearchInput={setSearchInput} isDark={isDark} setIsDark={setIsDark} />
         <Header />
         <Timeline searchInput={searchInput} playlists={config.playlists} />
         <Favorites favoriteUsers={config.favoriteUsers} />

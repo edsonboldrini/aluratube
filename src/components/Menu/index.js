@@ -1,4 +1,5 @@
 import styled from "styled-components"
+import { DarkSwitch } from "./components/DarkSwitch"
 import Search from "./components/Search"
 
 const StyledMenu = styled.header`
@@ -25,13 +26,14 @@ const StyledMenu = styled.header`
   }
 `
 
-export default function Menu ({ searchInput, setSearchInput }) {
+export default function Menu ({ searchInput, setSearchInput, isDark, setIsDark }) {
   return (
-    <StyledMenu>
+    <StyledMenu theme={isDark ? { backgroundLevel1: "#222222", borderBase: "#333333", textColorBase: "#FFFFFF" } : {}}>
       <div>
         <Logo />
       </div>
       <Search searchInput={searchInput} setSearchInput={setSearchInput} />
+      <DarkSwitch isDark={isDark} setIsDark={setIsDark} />
     </StyledMenu>
   )
 }
