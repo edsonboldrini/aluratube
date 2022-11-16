@@ -36,7 +36,7 @@ export const StyledRegisterVideo = styled.div`
   }
   form {
     width: 100%;
-    padding: 5%;
+    padding: 10%;
     background-color: rgba(0,0,0,0.5);
     position: fixed;
     top: 0; bottom: 0;
