@@ -5,6 +5,7 @@ import { StyledHeader } from '../src/components/Header'
 import { StyledTimeline } from '../src/components/Timeline'
 import { StyledFavorites } from '../src/components/Favorites'
 import { useState } from 'react'
+import Link from 'next/link'
 
 function HomePage () {
   const [searchInput, setSearchInput] = useState('')
@@ -58,12 +59,12 @@ function Timeline ({ playlists, searchInput }) {
                   })
                   .map((video, index) => {
                     return (
-                      <a key={index} href={video.url} target='_blank'>
+                      <Link key={index} href={`/video?title=${video.title}&id=${video.url.split('v=')[1]}`}>
                         <img src={video.thumb} />
                         <span>
                           {video.title}
                         </span>
-                      </a>
+                      </Link>
                     )
                   })
               }
@@ -83,12 +84,12 @@ function Favorites ({ favoriteUsers }) {
         <div>
           {favoriteUsers.map((user, index) => {
             return (
-              <a key={index} href={`https://www.youtube.com/@${user.name}`} target='_blank'>
+              <Link key={index} href={`https://www.youtube.com/@${user.name}`} target='_blank'>
                 <img src={user.img} />
                 <h4>
                   @{user.name}
                 </h4>
-              </a>
+              </Link>
             )
           })}
         </div>
