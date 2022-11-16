@@ -5,8 +5,11 @@ import Menu from '../src/components/Menu'
 import { StyledHeader } from '../src/components/Header'
 import { StyledTimeline } from '../src/components/Timeline'
 import { StyledFavorites } from '../src/components/Favorites'
+import { useState } from 'react'
 
 function HomePage () {
+  const [searchInput, setSearchInput] = useState('')
+
   return (
     <>
       <CSSReset />
@@ -15,19 +18,23 @@ function HomePage () {
         flexDirection: "column",
         flex: 1,
       }}>
-        <Menu />
+        <Menu searchInput={searchInput} setSearchInput={setSearchInput} />
         <Header />
-        <Timeline playlists={config.playlists} />
+        <Timeline searchInput={searchInput} playlists={config.playlists} />
         <Favorites favoriteUsers={config.favoriteUsers} />
       </div>
     </>
   )
 }
-
+const StyledBanner = styled.div`
+  background-color: gray;
+  background-image: url(${(props) => props.url});
+  height: 230px;
+`
 function Header () {
   return (
     <StyledHeader>
-      <img className='banner' src='https://media.istockphoto.com/id/537331500/pt/foto/fundo-abstrato-tecnologia-de-c%C3%B3digo-de-programa%C3%A7%C3%A3o-de-deve-software.jpg?s=1024x1024&w=is&k=20&c=sjcsvE53PphQQOrSDuNv_Par1fwlg5hRNxfOdKQdnL4=' />
+      <StyledBanner url={config.bannerUrl} />
       <section className='user-info'>
         <img className='user-img' src={`https://github.com/${config.github}.png`} />
         <div>
@@ -47,20 +54,24 @@ function Timeline (props) {
       {playlistNames.map((name) => {
         const videos = props.playlists[name]
         return (
-          <section>
+          <section key={name}>
             <h2>{name}</h2>
             <div>
               {
-                videos.map((video, index) => {
-                  return (
-                    <a key={index} href={video.url} target='_blank'>
-                      <img src={video.thumb} />
-                      <span>
-                        {video.title}
-                      </span>
-                    </a>
-                  )
-                })
+                videos
+                  .filter((video) => {
+                    return video.title.toLowerCase().includes(props.searchInput.toLowerCase())
+                  })
+                  .map((video, index) => {
+                    return (
+                      <a key={index} href={video.url} target='_blank'>
+                        <img src={video.thumb} />
+                        <span>
+                          {video.title}
+                        </span>
+                      </a>
+                    )
+                  })
               }
             </div>
           </section>

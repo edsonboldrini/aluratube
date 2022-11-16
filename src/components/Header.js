@@ -1,12 +1,6 @@
 import styled from "styled-components"
 
-export const StyledHeader = styled.div`
-  .banner {
-    object-fit: cover;
-    width: 100%;
-    height: 200px;
-  }
-
+export const StyledHeader = styled.div` 
   .user-img {
     width: 80px;
     height: 80px;
@@ -14,7 +8,6 @@ export const StyledHeader = styled.div`
   }
 
   .user-info {
-    margin-top: 16px;
     display: flex;
     align-items: center;
     width: 100%;
