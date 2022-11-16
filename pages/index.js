@@ -51,9 +51,9 @@ function Timeline (props) {
             <h2>{name}</h2>
             <div>
               {
-                videos.map((video) => {
+                videos.map((video, index) => {
                   return (
-                    <a href={video.url} target='_blank'>
+                    <a key={index} href={video.url} target='_blank'>
                       <img src={video.thumb} />
                       <span>
                         {video.title}
@@ -78,9 +78,9 @@ function Favorites (props) {
       <section>
         <h2>AluraTubes favoritos</h2>
         <div>
-          {favoriteUsers.map((user) => {
+          {favoriteUsers.map((user, index) => {
             return (
-              <a href={`https://www.youtube.com/@${user.name}`} target='_blank'>
+              <a key={index} href={`https://www.youtube.com/@${user.name}`} target='_blank'>
                 <img src={user.img} />
                 <h4>
                   @{user.name}
