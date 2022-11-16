@@ -6,10 +6,11 @@ import { StyledHeader } from '../src/components/Header'
 import { StyledTimeline } from '../src/components/Timeline'
 import { StyledFavorites } from '../src/components/Favorites'
 import { useState } from 'react'
+import { lightTheme } from '../src/components/Menu/components/ThemeSwitch'
 
 function HomePage () {
   const [searchInput, setSearchInput] = useState('')
-  const [isDark, setIsDark] = useState(false)
+  const [theme, setTheme] = useState(lightTheme)
 
   return (
     <>
@@ -18,11 +19,12 @@ function HomePage () {
         display: "flex",
         flexDirection: "column",
         flex: 1,
+        backgroundColor: theme.backgroundBase
       }}>
-        <Menu searchInput={searchInput} setSearchInput={setSearchInput} isDark={isDark} setIsDark={setIsDark} />
-        <Header />
-        <Timeline searchInput={searchInput} playlists={config.playlists} />
-        <Favorites favoriteUsers={config.favoriteUsers} />
+        <Menu theme={theme} setTheme={setTheme} searchInput={searchInput} setSearchInput={setSearchInput} />
+        <Header theme={theme} />
+        <Timeline theme={theme} searchInput={searchInput} playlists={config.playlists} />
+        <Favorites theme={theme} favoriteUsers={config.favoriteUsers} />
       </div>
     </>
   )
@@ -32,36 +34,36 @@ const StyledBanner = styled.div`
   background-image: url(${(props) => props.url});
   height: 230px;
 `
-function Header () {
+function Header ({ theme }) {
   return (
     <StyledHeader>
       <StyledBanner url={config.bannerUrl} />
       <section className='user-info'>
         <img className='user-img' src={`https://github.com/${config.github}.png`} />
         <div>
-          <h2>{config.name}</h2>
-          <p>{config.job}</p>
+          <h2 style={{ color: theme.textColorBase }}>{config.name}</h2>
+          <p style={{ color: theme.textColorBase }}>{config.job}</p>
         </div>
       </section>
     </StyledHeader>
   )
 }
 
-function Timeline (props) {
-  const playlistNames = Object.keys(props.playlists)
+function Timeline ({ theme, playlists, searchInput }) {
+  const playlistNames = Object.keys(playlists)
 
   return (
-    <StyledTimeline>
+    <StyledTimeline theme={theme}>
       {playlistNames.map((name) => {
-        const videos = props.playlists[name]
+        const videos = playlists[name]
         return (
           <section key={name}>
-            <h2>{name}</h2>
+            <h2 style={{ color: theme.textColorBase }}>{name}</h2>
             <div>
               {
                 videos
                   .filter((video) => {
-                    return video.title.toLowerCase().includes(props.searchInput.toLowerCase())
+                    return video.title.toLowerCase().includes(searchInput.toLowerCase())
                   })
                   .map((video, index) => {
                     return (
@@ -82,19 +84,17 @@ function Timeline (props) {
   )
 }
 
-function Favorites (props) {
-  const { favoriteUsers } = props
-
+function Favorites ({ theme, favoriteUsers }) {
   return (
     <StyledFavorites>
       <section>
-        <h2>AluraTubes favoritos</h2>
+        <h2 style={{ color: theme.textColorBase }}>AluraTubes favoritos</h2>
         <div>
           {favoriteUsers.map((user, index) => {
             return (
               <a key={index} href={`https://www.youtube.com/@${user.name}`} target='_blank'>
                 <img src={user.img} />
-                <h4>
+                <h4 style={{ color: theme.textColorBase }}>
                   @{user.name}
                 </h4>
               </a>
