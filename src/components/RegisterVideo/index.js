@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { StyledRegisterVideo } from "./styles";
-import { createClient } from "@supabase/supabase-js"
+import { VideoService } from "../../services/VideoService";
 
 function useForm ({ initialValues, onSubmit, validate }) {
   const [values, setValues] = useState(initialValues)
@@ -38,10 +38,6 @@ function useForm ({ initialValues, onSubmit, validate }) {
   }
 }
 
-const PROJECT_URL = 'https://qvwzujnkkqehrmczmepy.supabase.co'
-const API_KEY = '***REMOVED***'
-const supabase = createClient(PROJECT_URL, API_KEY)
-
 function getVideoIdFromYoutubeUrl (url) {
   const regex = new RegExp(/^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/, 'gmi')
   const videoId = (regex.exec(url))[7]
@@ -56,6 +52,7 @@ function getThumbnailFromYoutubeUrl (url) {
 }
 
 export default function RegisterVideo ({ playlists, reloadData }) {
+  const videoService = VideoService()
   const [isModalVisible, setIsModalVisible] = useState(false)
   const createVideoForm = useForm({
     initialValues: {
@@ -74,16 +71,16 @@ export default function RegisterVideo ({ playlists, reloadData }) {
         }
       })
 
-      supabase.from('video').insert({
+      const created = videoService.insertOne({
         ...createVideoForm.values,
         thumb
-      }).then((response) => {
-        if (response.status == 201) {
-          setIsModalVisible(false)
-          createVideoForm.clearForm()
-          reloadData()
-        }
       })
+
+      if (created) {
+        setIsModalVisible(false)
+        createVideoForm.clearForm()
+        reloadData()
+      }
     },
     validate: (values) => {
       const errors = {};

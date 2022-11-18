@@ -7,13 +7,12 @@ import { StyledFavorites } from '../src/components/Favorites'
 import { useState, useEffect, useMemo } from 'react'
 import Link from 'next/link'
 import RegisterVideo from '../src/components/RegisterVideo'
-import { createClient } from "@supabase/supabase-js"
-
-const PROJECT_URL = 'https://qvwzujnkkqehrmczmepy.supabase.co'
-const API_KEY = '***REMOVED***'
-const supabase = createClient(PROJECT_URL, API_KEY)
+import { VideoService } from '../src/services/VideoService'
+import { PlaylistService } from '../src/services/PlaylistService'
 
 function HomePage () {
+  const videoService = VideoService()
+  const playlistService = PlaylistService()
   const [searchInput, setSearchInput] = useState('')
   const [playlists, setPlaylists] = useState([])
   const [videos, setVideos] = useState([])
@@ -26,17 +25,16 @@ function HomePage () {
     return aux
   }, [playlists, videos]);
 
-  function loadData () {
-    supabase.from('playlist').select().then((response) => {
-      if (response.status == 200) {
-        setPlaylists(response.data)
-      }
-    })
-    supabase.from('video').select().then((response) => {
-      if (response.status == 200) {
-        setVideos(response.data)
-      }
-    })
+  async function loadData () {
+    const auxPlaylists = await playlistService.getAll()
+    if (auxPlaylists) {
+      setPlaylists(auxPlaylists)
+    }
+
+    const auxVideos = await videoService.getAll()
+    if (auxVideos) {
+      setVideos(auxVideos)
+    }
   }
 
   useEffect(() => {
