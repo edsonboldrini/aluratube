@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { StyledRegisterVideo } from "./styles";
+import { createClient } from "@supabase/supabase-js"
 
 function useForm ({ initialValues, onSubmit, validate }) {
   const [values, setValues] = useState(initialValues)
@@ -37,26 +38,56 @@ function useForm ({ initialValues, onSubmit, validate }) {
   }
 }
 
+const PROJECT_URL = 'https://qvwzujnkkqehrmczmepy.supabase.co'
+const API_KEY = '***REMOVED***'
+
+// Create a single supabase client for interacting with your database
+const supabase = createClient(PROJECT_URL, API_KEY)
+
+function getVideoIdFromYoutubeUrl (url) {
+  const regex = new RegExp(/^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/, 'gmi')
+  const videoId = (regex.exec(url))[7]
+  if (videoId) {
+    return videoId
+  }
+}
+
+function getThumbnailFromYoutubeUrl (url) {
+  const videoId = getVideoIdFromYoutubeUrl(url)
+  return `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`
+}
+
 export default function RegisterVideo () {
   const [isModalVisible, setIsModalVisible] = useState(false)
   const createVideoForm = useForm({
-    initialValues: { title: "", url: "", thumb: "" },
+    initialValues: {
+      playlist_id: "",
+      title: "",
+      url: "",
+      thumb: "",
+    },
     onSubmit: () => {
-      const regex = new RegExp(/^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/, 'gmi')
-      const videoId = (regex.exec(createVideoForm.values.url))[7]
       createVideoForm.handleChange({
         target: {
           name: 'thumb',
-          value: `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`
+          value: getThumbnailFromYoutubeUrl(createVideoForm.values.url)
         }
       })
-      setTimeout(() => {
-        setIsModalVisible(false)
-        createVideoForm.clearForm()
-      }, 1000)
+
+      supabase.from('video').insert({
+        ...createVideoForm.values
+      }).then((response) => {
+        if (response.status == 201) {
+          setIsModalVisible(false)
+          createVideoForm.clearForm()
+        }
+      })
     },
     validate: (values) => {
       const errors = {};
+      if (!values.playlist_id) {
+        errors.playlist_id = 'Required';
+      }
       if (!values.title) {
         errors.title = 'Required';
       }
@@ -71,6 +102,21 @@ export default function RegisterVideo () {
       return errors;
     },
   })
+
+
+
+  const [playlists, setPlaylists] = useState([])
+  const nonePlaylist = {
+    id: '',
+    name: 'Pick one playlist'
+  }
+
+  useEffect(() => {
+    supabase.from('playlist').select().then((response) => {
+      setPlaylists([nonePlaylist, ...response.data])
+    })
+  }, [])
+
 
   return (
     <StyledRegisterVideo>
@@ -90,6 +136,22 @@ export default function RegisterVideo () {
               }}>
                 X
               </button>
+              <select
+                name='playlist_id'
+                value={createVideoForm.values.playlist_id}
+                onChange={createVideoForm.handleChange}
+              >
+                {
+                  playlists.map((p) => {
+                    return (
+                      <option key={p.id} value={p.id}>{p.name}</option>
+                    )
+                  })
+                }
+              </select>
+              {
+                <p>{createVideoForm.errors.playlist_id}</p>
+              }
               <input
                 placeholder='Video title'
                 name='title'
