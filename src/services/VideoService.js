@@ -1,7 +1,7 @@
 import { createClient } from "@supabase/supabase-js"
 
 const PROJECT_URL = 'https://qvwzujnkkqehrmczmepy.supabase.co'
-const API_KEY = '***REMOVED***'
+const API_KEY = process.env.API_KEY
 const supabase = createClient(PROJECT_URL, API_KEY)
 
 export function VideoService () {
