@@ -15,7 +15,6 @@ const supabase = createClient(PROJECT_URL, API_KEY)
 
 function HomePage () {
   const [searchInput, setSearchInput] = useState('')
-
   const [playlists, setPlaylists] = useState([])
   const [videos, setVideos] = useState([])
   const computedPlaylists = useMemo(() => {
@@ -27,7 +26,7 @@ function HomePage () {
     return aux
   }, [playlists, videos]);
 
-  useEffect(() => {
+  function loadData () {
     supabase.from('playlist').select().then((response) => {
       if (response.status == 200) {
         setPlaylists(response.data)
@@ -38,11 +37,15 @@ function HomePage () {
         setVideos(response.data)
       }
     })
+  }
+
+  useEffect(() => {
+    loadData()
   }, [])
 
   return (
     <>
-      <RegisterVideo playlists={playlists} />
+      <RegisterVideo playlists={playlists} reloadData={loadData} />
       <div>
         <Menu searchInput={searchInput} setSearchInput={setSearchInput} />
         <Header />

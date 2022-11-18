@@ -55,7 +55,7 @@ function getThumbnailFromYoutubeUrl (url) {
   return `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`
 }
 
-export default function RegisterVideo ({ playlists }) {
+export default function RegisterVideo ({ playlists, reloadData }) {
   const [isModalVisible, setIsModalVisible] = useState(false)
   const createVideoForm = useForm({
     initialValues: {
@@ -81,6 +81,7 @@ export default function RegisterVideo ({ playlists }) {
         if (response.status == 201) {
           setIsModalVisible(false)
           createVideoForm.clearForm()
+          reloadData()
         }
       })
     },
