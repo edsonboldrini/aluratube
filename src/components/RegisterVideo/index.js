@@ -40,8 +40,6 @@ function useForm ({ initialValues, onSubmit, validate }) {
 
 const PROJECT_URL = 'https://qvwzujnkkqehrmczmepy.supabase.co'
 const API_KEY = '***REMOVED***'
-
-// Create a single supabase client for interacting with your database
 const supabase = createClient(PROJECT_URL, API_KEY)
 
 function getVideoIdFromYoutubeUrl (url) {
@@ -57,7 +55,7 @@ function getThumbnailFromYoutubeUrl (url) {
   return `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`
 }
 
-export default function RegisterVideo () {
+export default function RegisterVideo ({ playlists }) {
   const [isModalVisible, setIsModalVisible] = useState(false)
   const createVideoForm = useForm({
     initialValues: {
@@ -67,15 +65,18 @@ export default function RegisterVideo () {
       thumb: "",
     },
     onSubmit: () => {
+      const thumb = getThumbnailFromYoutubeUrl(createVideoForm.values.url)
+
       createVideoForm.handleChange({
         target: {
           name: 'thumb',
-          value: getThumbnailFromYoutubeUrl(createVideoForm.values.url)
+          value: thumb
         }
       })
 
       supabase.from('video').insert({
-        ...createVideoForm.values
+        ...createVideoForm.values,
+        thumb
       }).then((response) => {
         if (response.status == 201) {
           setIsModalVisible(false)
@@ -103,20 +104,10 @@ export default function RegisterVideo () {
     },
   })
 
-
-
-  const [playlists, setPlaylists] = useState([])
   const nonePlaylist = {
     id: '',
     name: 'Pick one playlist'
   }
-
-  useEffect(() => {
-    supabase.from('playlist').select().then((response) => {
-      setPlaylists([nonePlaylist, ...response.data])
-    })
-  }, [])
-
 
   return (
     <StyledRegisterVideo>
@@ -142,7 +133,7 @@ export default function RegisterVideo () {
                 onChange={createVideoForm.handleChange}
               >
                 {
-                  playlists.map((p) => {
+                  [nonePlaylist, ...playlists].map((p) => {
                     return (
                       <option key={p.id} value={p.id}>{p.name}</option>
                     )

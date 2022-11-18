@@ -4,20 +4,49 @@ import Menu from '../src/components/Menu'
 import { StyledHeader } from '../src/components/Header'
 import { StyledTimeline } from '../src/components/Timeline'
 import { StyledFavorites } from '../src/components/Favorites'
-import { useState } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import Link from 'next/link'
 import RegisterVideo from '../src/components/RegisterVideo'
+import { createClient } from "@supabase/supabase-js"
+
+const PROJECT_URL = 'https://qvwzujnkkqehrmczmepy.supabase.co'
+const API_KEY = '***REMOVED***'
+const supabase = createClient(PROJECT_URL, API_KEY)
 
 function HomePage () {
   const [searchInput, setSearchInput] = useState('')
 
+  const [playlists, setPlaylists] = useState([])
+  const [videos, setVideos] = useState([])
+  const computedPlaylists = useMemo(() => {
+    const aux = {}
+    for (const p of playlists) {
+      aux[p.name] = videos.filter((v) => v.playlist_id == p.id)
+    }
+
+    return aux
+  }, [playlists, videos]);
+
+  useEffect(() => {
+    supabase.from('playlist').select().then((response) => {
+      if (response.status == 200) {
+        setPlaylists(response.data)
+      }
+    })
+    supabase.from('video').select().then((response) => {
+      if (response.status == 200) {
+        setVideos(response.data)
+      }
+    })
+  }, [])
+
   return (
     <>
-      <RegisterVideo />
+      <RegisterVideo playlists={playlists} />
       <div>
         <Menu searchInput={searchInput} setSearchInput={setSearchInput} />
         <Header />
-        <Timeline searchInput={searchInput} playlists={config.playlists} />
+        <Timeline searchInput={searchInput} playlists={computedPlaylists} />
         <Favorites favoriteUsers={config.favoriteUsers} />
       </div>
     </>
