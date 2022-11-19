@@ -10,12 +10,10 @@ import RegisterVideo from '../src/components/RegisterVideo'
 import { VideoService } from '../src/services/VideoService'
 import { PlaylistService } from '../src/services/PlaylistService'
 
-function HomePage () {
-  const videoService = VideoService()
-  const playlistService = PlaylistService()
+export default function HomePage ({ serverPlaylists, serverVideos }) {
   const [searchInput, setSearchInput] = useState('')
-  const [playlists, setPlaylists] = useState([])
-  const [videos, setVideos] = useState([])
+  const [playlists, setPlaylists] = useState(serverPlaylists)
+  const [videos, setVideos] = useState(serverVideos)
   const computedPlaylists = useMemo(() => {
     const aux = {}
     for (const p of playlists) {
@@ -25,25 +23,15 @@ function HomePage () {
     return aux
   }, [playlists, videos]);
 
-  async function loadData () {
-    const auxPlaylists = await playlistService.getAll()
-    if (auxPlaylists) {
-      setPlaylists(auxPlaylists)
-    }
-
-    const auxVideos = await videoService.getAll()
-    if (auxVideos) {
-      setVideos(auxVideos)
-    }
+  async function reloadHomePageData () {
+    const { playlists: newPlaylists, videos: newVideos } = await loadData()
+    setPlaylists(newPlaylists)
+    setVideos(newVideos)
   }
-
-  useEffect(() => {
-    loadData()
-  }, [])
 
   return (
     <>
-      <RegisterVideo playlists={playlists} reloadData={loadData} />
+      <RegisterVideo playlists={playlists} reloadData={reloadHomePageData} />
       <div>
         <Menu searchInput={searchInput} setSearchInput={setSearchInput} />
         <Header />
@@ -130,4 +118,22 @@ function Favorites ({ favoriteUsers }) {
   )
 }
 
-export default HomePage
+async function loadData () {
+  const playlistService = PlaylistService()
+  const videoService = VideoService()
+  const auxPlaylists = await playlistService.getAll()
+  const auxVideos = await videoService.getAll()
+
+  return { playlists: auxPlaylists, videos: auxVideos }
+}
+
+export async function getServerSideProps (context) {
+  const { playlists, videos } = await loadData()
+
+  return {
+    props: {
+      serverPlaylists: playlists,
+      serverVideos: videos,
+    }, // will be passed to the page component as props
+  }
+}

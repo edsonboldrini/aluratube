@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { StyledRegisterVideo } from "./styles";
 import { VideoService } from "../../services/VideoService";
 
@@ -39,38 +39,34 @@ function useForm ({ initialValues, onSubmit, validate }) {
 }
 
 function getVideoIdFromYoutubeUrl (url) {
+  if (!url) return null
   const regex = new RegExp(/^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/, 'gmi')
-  const videoId = (regex.exec(url))[7]
-  if (videoId) {
-    return videoId
+  const exec = regex.exec(url)
+  if (exec && exec.length >= 7 && exec[7]) {
+    return exec[7]
   }
+  return null
 }
 
 function getThumbnailFromYoutubeUrl (url) {
   const videoId = getVideoIdFromYoutubeUrl(url)
-  return `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`
+  if (videoId) {
+    return `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`
+  }
+  return null
 }
 
 export default function RegisterVideo ({ playlists, reloadData }) {
   const videoService = VideoService()
   const [isModalVisible, setIsModalVisible] = useState(false)
+
   const createVideoForm = useForm({
     initialValues: {
       playlist_id: "",
       title: "",
       url: "",
-      thumb: "",
     },
-    onSubmit: () => {
-      const thumb = getThumbnailFromYoutubeUrl(createVideoForm.values.url)
-
-      createVideoForm.handleChange({
-        target: {
-          name: 'thumb',
-          value: thumb
-        }
-      })
-
+    onSubmit: async () => {
       const created = videoService.insertOne({
         ...createVideoForm.values,
         thumb
@@ -79,7 +75,7 @@ export default function RegisterVideo ({ playlists, reloadData }) {
       if (created) {
         setIsModalVisible(false)
         createVideoForm.clearForm()
-        reloadData()
+        await reloadData()
       }
     },
     validate: (values) => {
@@ -101,6 +97,11 @@ export default function RegisterVideo ({ playlists, reloadData }) {
       return errors;
     },
   })
+
+  const thumb = useMemo(() => {
+    const newThumb = getThumbnailFromYoutubeUrl(createVideoForm.values.url)
+    return newThumb
+  }, [createVideoForm.values.url])
 
   const nonePlaylist = {
     id: '',
@@ -175,8 +176,8 @@ export default function RegisterVideo ({ playlists, reloadData }) {
                 Cadastrar
               </button>
               {
-                createVideoForm.values.thumb &&
-                <img style={{ marginTop: '16px' }} src={createVideoForm.values.thumb} />
+                thumb &&
+                <img style={{ marginTop: '16px' }} src={thumb} />
               }
             </div>
           </form>
